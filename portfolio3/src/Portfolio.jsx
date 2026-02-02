@@ -8,6 +8,39 @@ import WelcomeLoader from "./Welcome";
 export default function Portfolio() {
   const containerRef = useRef(null);
 const [loading, setLoading] = useState(true);
+const firstSectionRef = useRef(null);
+const secondSectionRef = useRef(null);
+const autoScrollUsed = useRef(false);
+const [showNav, setShowNav] = useState(false);
+useEffect(() => {
+  if (loading) return;
+
+  let userScrolled = false;
+
+  const onUserScroll = () => {
+    userScrolled = true;
+  };
+
+  window.addEventListener("wheel", onUserScroll, { once: true });
+  window.addEventListener("touchmove", onUserScroll, { once: true });
+
+  const timer = setTimeout(() => {
+    if (!userScrolled && !autoScrollUsed.current) {
+      autoScrollUsed.current = true;
+      secondSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+      });
+      setShowNav(true);
+    }
+  }, 2000);
+
+  return () => {
+    clearTimeout(timer);
+    window.removeEventListener("wheel", onUserScroll);
+    window.removeEventListener("touchmove", onUserScroll);
+  };
+}, [loading]);
+
 
 // const [loading, setLoading] = useState(true);
 
@@ -48,13 +81,18 @@ useEffect(() => {
     </AnimatePresence>
 
      {!loading && (
+      
      
     <div
       ref={containerRef}
       className="bg-neutral-950 text-white font-sans overflow-hidden"
     >
+      <AnimatePresence>
+  {showNav && <GlassNavbar />}
+</AnimatePresence>
+
       {/* Section 1 – Portfolio Intro */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black">
+      <section  ref={firstSectionRef} className="relative h-screen flex items-center justify-center overflow-hidden bg-black">
         {/* Background Blobs */}
         <div className="absolute -top-40 -left-40 z-0 h-[600px] w-[600px] rounded-full bg-purple-600/50 blur-[120px]" />
         <div className="absolute top-20 right-0 z-0 h-[500px] w-[500px] rounded-full bg-indigo-600/50 blur-[120px]" />
@@ -92,7 +130,7 @@ useEffect(() => {
       </section>
 
       {/* Section 2 – About */}
-      <section className="relative min-h-screen w-full bg-black text-white overflow-hidden">
+      <section   ref={secondSectionRef} className="relative min-h-screen w-full bg-black text-white overflow-hidden">
         {/* Gradient Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-800 via-purple-900 to-black" />
         <div className="absolute inset-0 bg-black/40" />
@@ -370,5 +408,37 @@ function FloatingSkill({ skill }) {
     >
       {skill}
     </motion.div>
+  );
+}
+
+
+function GlassNavbar() {
+  const items = ["Home", "About", "Skills", "Projects", "Contact"];
+
+  return (
+    <motion.nav
+      initial={{ y: -30, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="
+        fixed top-4 left-1/2 -translate-x-1/2 z-50
+        px-8 py-3 rounded-full
+        backdrop-blur-xl bg-white/10
+        border border-white/20
+        shadow-[0_10px_40px_rgba(0,0,0,0.3)]
+      "
+    >
+      <ul className="flex gap-8 text-sm font-medium tracking-wide">
+        {items.map((item) => (
+          <li
+            key={item}
+            className="cursor-pointer text-white/80 hover:text-white transition"
+          >
+            {item}
+          </li>
+        ))}
+      </ul>
+    </motion.nav>
   );
 }
