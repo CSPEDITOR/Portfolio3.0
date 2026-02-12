@@ -1,17 +1,133 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import img from "./image/me.png";
 import { AnimatePresence } from "framer-motion";
 import WelcomeLoader from "./Welcome";
+import img1 from "./image/img1.png"
+import img2 from "./image/img2.png"
+import img3 from "./image/img3.png"
+import img4 from "./image/img4.png"
+import img5 from "./image/img5.png"
+import img6 from "./image/img6.png"
+import img7 from "./image/img7.png"
+import img8 from "./image/img8.png"
 // import WelcomeLoader from "./WelcomeLoader";
+
+const TABS = ["ALL PROJECTS", "WEB", "PORTFOLIO", "DESIGN", "EDIT"];
+
+const PROJECTS = {
+  WEB: [
+    {
+      title: "ElevateU",
+      image: img1,
+      desc: "Student career guidance platform",
+      link: "https://example.com",
+    },
+    {
+      title: "Fit Dish",
+      image: img2,
+      desc: "Healthy food landing page",
+      link: "https://example.com",
+    },
+    {
+      title: "Prescripto",
+      image: img3,
+      desc: "Doctor appointment booking website",
+      link: "https://example.com",
+    },
+  ],
+
+  DESIGN: [
+    {
+      title: "UI Concept",
+      image: img6,
+      desc: "Modern UI design exploration",
+      link: "#",
+    },
+    {
+      title: "Landing Page",
+      image: img7,
+      desc: "Clean marketing website design",
+      link: "#",
+    },
+  ],
+
+  PORTFOLIO: [
+    {
+      title: "Personal Portfolio",
+      image: img5,
+      desc: "Cinematic portfolio website",
+      link: "#",
+    },
+  ],
+
+  EDIT: [
+    {
+      title: "Video Reel",
+      image: img8,
+      desc: "High-end cinematic video editing",
+      link: "#",
+    },
+    {
+      title: "Video Reel",
+      image: img8,
+      desc: "High-end cinematic video editing",
+      link: "#",
+    },
+    {
+      title: "Video Reel",
+      image: img8,
+      desc: "High-end cinematic video editing",
+      link: "#",
+    },
+  ],
+};
+const education = [
+  {
+    id: 1,
+    title: "Master of Computer Application",
+    college: "Indira gandhi institute of technology",
+    year: "2023 – 2025",
+    location: "Sarang",
+  },
+  {
+    id: 2,
+    title: "Bachelor of Science",
+    college: "Banki Autonomous College",
+    year: "2020 – 2023",
+    location:"Banki",
+  },
+  {
+    id: 3,
+    title: "Intermediate Science",
+    college: "Prananath Autonomous College",
+    year: "2020",
+    location:"Khordha",
+  },
+  {
+    id: 4,
+    title: "matriculation",
+    college: "Saraswati Shishu Vidya Mandir",
+    year: "2018",
+    location:"Jatni",
+  },
+];
 
 export default function Portfolio() {
   const containerRef = useRef(null);
-const [loading, setLoading] = useState(true);
+const [loading, setLoading] = useState(false);
 const firstSectionRef = useRef(null);
 const secondSectionRef = useRef(null);
 const autoScrollUsed = useRef(false);
 const [showNav, setShowNav] = useState(false);
+const [activeTab, setActiveTab] = useState("ALL PROJECTS");
+
+  const items =
+    activeTab === "ALL PROJECTS"
+      ? Object.values(PROJECTS).flat()
+      : PROJECTS[activeTab];
+
+
 useEffect(() => {
   if (loading) return;
 
@@ -227,6 +343,134 @@ useEffect(() => {
       {/* Section 3 – Skills with Interactive Grid */}
       <SkillsSection />
 
+
+       <section className="h-screen flex items-center justify-center bg-black text-white overflow-hidden">
+        <motion.h1
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1 }}
+          className="text-[14vw] font-extrabold tracking-tight"
+        >
+          PROJECTS
+        </motion.h1>
+      </section>
+
+      {/* ===================== SECTION 2 : SHOWCASE ===================== */}
+      <section className="relative min-h-screen bg-gradient-to-br from-purple-950 via-black to-black text-white flex">
+        
+        {/* ---------- LEFT SIDE ---------- */}
+        <div className="w-[55%] px-5 flex justify-center items-center gap-10">
+
+          {/* Glass Vertical Navbar */}
+          <div className=" h-[50vh] w-[15%] z-20
+            backdrop-blur-xl bg-white/10 border border-white/20
+            rounded-full py-6 px-4 space-y-4 flex flex-col justify-center items-center gap-5 ">
+            {TABS.map(tab => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`block text-[10px] tracking-widest transition cursor-pointer
+                  ${activeTab === tab ? "text-white , scale-150" : "text-white/50"}
+                `}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
+          {/* Big Dynamic Heading */}
+          <AnimatePresence mode="wait">
+            <motion.h1
+              key={activeTab}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -40 }}
+              transition={{ duration: 0.6 }}
+              className=" flex-1 text-[7vw] font-extrabold  "
+            >
+              {activeTab}
+            
+            </motion.h1>
+          </AnimatePresence>
+        </div>
+
+        {/* ---------- RIGHT SIDE ---------- */}
+        <div className="w-[45%] px-20 py-24">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="grid grid-cols-3 gap-10 "
+            >
+              {items.map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.08 }}
+                  className={`relative rounded-3xl overflow-hidden h-40 w-40
+                    ${i % 2 === 0 ? "" : ""}
+                  `}
+                >
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover"
+                  />
+
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-black/70
+                    opacity-0 hover:opacity-100 transition
+                    flex flex-col justify-end p-6 ">
+                    <p className="text-sm mb-2">{item.desc}</p>
+                    <a
+                      href={item.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xs underline"
+                    >
+                      Visit Website →
+                    </a>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </section>
+      <section className="h-screen flex items-center justify-center bg-black text-white overflow-hidden">
+        <motion.h1
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1 }}
+          className="text-[14vw] font-extrabold tracking-tight"
+        >
+          EDUCATION
+        </motion.h1>
+      </section>
+       <section className="relative min-h-screen bg-black text-white px-24 py-32">
+      {/* <h1 className="text-7xl font-extrabold mb-24 tracking-widest">
+        EDUCATION
+      </h1> */}
+
+      <div className="relative">
+        {/* Vertical Line */}
+        <motion.div
+          initial={{ scaleY: 0 }}
+          whileInView={{ scaleY: 1 }}
+          viewport={{ once: false }}
+          transition={{ duration: 1, ease: "easeInOut" }}
+          className="absolute left-[22px] top-0 w-[2px] h-full bg-white/30 origin-top"
+        />
+
+        {education.map((item, index) => (
+          <EducationItem key={item.id} item={item} index={index} />
+        ))}
+      </div>
+    </section>
+
       {/* Section 4 – About */}
       <section className="h-screen flex items-center justify-center px-6">
         <motion.p
@@ -440,5 +684,100 @@ function GlassNavbar() {
         ))}
       </ul>
     </motion.nav>
+  );
+}
+function EducationItem({ item, index }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { margin: "-100px" });
+
+  return (
+    <div ref={ref} className="relative flex items-start gap-16 mb-28">
+      
+      {/* LEFT SIDE – NUMBER + PING */}
+      <div className="relative">
+        {/* Ping Effect */}
+        <motion.span
+          animate={{
+            scale: isInView ? [1, 1.8, 1] : 1,
+            opacity: isInView ? [0.6, 0, 0.6] : 0,
+          }}
+          transition={{
+            duration: 1.8,
+            repeat: Infinity,
+          }}
+          className="absolute inset-0 rounded-full bg-purple-500 blur-md"
+        />
+
+        {/* Number Circle */}
+        <motion.div
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{
+            scale: isInView ? 1 : 0.5,
+            opacity: isInView ? 1 : 0,
+          }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          className="
+            relative z-10
+            w-12 h-12 rounded-full
+            flex items-center justify-center
+            bg-white text-black font-bold
+          "
+        >
+          {item.id}
+        </motion.div>
+      </div>
+
+      {/* HORIZONTAL LINE */}
+      <motion.div
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: isInView ? 1 : 0 }}
+        transition={{ duration: 0.6, ease: "easeInOut" }}
+        className="origin-left w-24 h-[2px] bg-white/40 mt-6"
+      />
+
+      {/* CONTENT */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{
+          opacity: isInView ? 1 : 0,
+          y: isInView ? 0 : 20,
+        }}
+        transition={{ duration: 0.6, ease: "easeInOut" }}
+        className="max-w-xl"
+      >
+        <h2 className="text-3xl font-bold mb-2">
+          {item.title}
+        </h2>
+        {/* <p className="text-lg text-gray-300">
+          {item.college}
+        </p> */}
+        <p className="text-sm text-gray-400 mt-1">
+          {item.year}
+        </p>
+      </motion.div>
+      <motion.div
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: isInView ? 1 : 0 }}
+        transition={{ duration: 0.6, ease: "easeInOut" }}
+        className="origin-left w-24 h-[2px] bg-white/40 mt-6"
+      />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{
+          opacity: isInView ? 1 : 0,
+          y: isInView ? 0 : 20,
+        }}
+        transition={{ duration: 0.6, ease: "easeInOut" }}
+        className="max-w-xl"
+      >
+        
+        <h2 className="text-3xl font-bold mb-2">
+          {item.college}
+        </h2>
+        <p className="text-sm text-gray-400 mt-1">
+          {item.location}
+        </p>
+      </motion.div>
+    </div>
   );
 }
